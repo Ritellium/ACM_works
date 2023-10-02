@@ -23,20 +23,20 @@ int main()
 		Matrix<Rational> b(n2, m2);
 		b.input(in1);
 
-		out1 << "Ğåøåíèå ÷åğåç Ñ.Å.Ä" << endl;
+		out1 << "Ğ ĞµÑˆĞµĞ½Ğ¸Ğµ Ñ‡ĞµÑ€ĞµĞ· Ğ¡.Ğ•.Ğ”" << endl;
 		solveSystemSED(matr, b).output(out1);
 		out1 << endl;
-		out1 << "Ğåøåíèå ñ âûáîğîì ìàêñèìóìà ïî ñòîëáöó" << endl;
+		out1 << "Ğ ĞµÑˆĞµĞ½Ğ¸Ğµ Ñ Ğ²Ñ‹Ğ±Ğ¾Ñ€Ğ¾Ğ¼ Ğ¼Ğ°ĞºÑĞ¸Ğ¼ÑƒĞ¼Ğ° Ğ¿Ğ¾ ÑÑ‚Ğ¾Ğ»Ğ±Ñ†Ñƒ" << endl;
 		solveSystemColumn(matr, b).output(out1);
 		out1 << endl;
-		out1 << "Ğåøåíèå ñ âûáîğîì ìàêñèìóìà ïî ïîäìàòğèöå" << endl;
+		out1 << "Ğ ĞµÑˆĞµĞ½Ğ¸Ğµ Ñ Ğ²Ñ‹Ğ±Ğ¾Ñ€Ğ¾Ğ¼ Ğ¼Ğ°ĞºÑĞ¸Ğ¼ÑƒĞ¼Ğ° Ğ¿Ğ¾ Ğ¿Ğ¾Ğ´Ğ¼Ğ°Ñ‚Ñ€Ğ¸Ñ†Ğµ" << endl;
 		solveSystemFullMatr(matr, b).output(out1);
 		out1 << endl;
 		
-		out1 << "Îïğåäåëèòåëü A: " << matr.findDeterminator().toString() << endl;
-		out1 << "Ìàòğèöà A^-1" << endl;
+		out1 << "ĞĞ¿Ñ€ĞµĞ´ĞµĞ»Ğ¸Ñ‚ĞµĞ»ÑŒ A: " << matr.find_determinator().toString() << endl;
+		out1 << "ĞœĞ°Ñ‚Ñ€Ğ¸Ñ†Ğ° A^-1" << endl;
 		matr.findReverse().output(out1);
-		out1 << "Îïğåäåëèòåëü A^-1: " << matr.findReverse().findDeterminator().toString() << endl;
+		out1 << "ĞĞ¿Ñ€ĞµĞ´ĞµĞ»Ğ¸Ñ‚ĞµĞ»ÑŒ A^-1: " << matr.findReverse().find_determinator().toString() << endl;
 
 		in1.close();
 		out1.close();

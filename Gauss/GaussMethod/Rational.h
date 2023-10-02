@@ -17,21 +17,21 @@ public:
 	static const Rational one;
 
 	Rational();
-	Rational(long long _top);
+	explicit Rational(long long _top);
 	Rational(long long _top, long long _down);
 	Rational(Rational const& r) = default;
 	Rational(Rational&& r) = default;
-	Rational(std::string const& str);
+	explicit Rational(std::string const& str);
 
 	std::string toString();
 	Rational fromString(std::string const& str);
-	Rational abs() const;
+	[[nodiscard]] Rational abs() const;
 
 	friend std::istream& operator >> (std::istream& in, Rational& r);
 	friend std::ostream& operator << (std::ostream& out, Rational& r);
 
 	Rational& fromDouble(double r, unsigned int pres);
-	double toDouble() const;
+	[[nodiscard]] double toDouble() const;
 
 	void normalize();
 	static long long gcd(long long a, long long b);

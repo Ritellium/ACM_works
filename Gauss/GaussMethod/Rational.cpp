@@ -8,7 +8,7 @@ Rational::Rational(long long _top) : top(_top), down(1) {}
 Rational::Rational(long long _top, long long _down)
 {
 	if (_down == 0)
-		throw RationalException::div_zero;
+        throw RationalException(RationalException::div_zero);
 	else {
 		top = _top;
 		down = _down;
@@ -74,7 +74,7 @@ std::ostream& operator << (std::ostream& out, Rational& r) {
 Rational& Rational::inverse() {
 	if (top == 0)
 	{
-		throw RationalException::div_zero;
+        throw RationalException(RationalException::div_zero);
 	}
 	else {
 		long long buf = top;
@@ -110,7 +110,7 @@ double Rational::toDouble() const {
 Rational& Rational::fromDouble(double r, unsigned int pres) {
 	if (pres > 18)
 	{
-		throw RationalException::prec_err;
+        throw RationalException(RationalException::prec_err);
 	}
 	down = 1;
 	int sub = 0;
@@ -125,7 +125,7 @@ Rational& Rational::fromDouble(double r, unsigned int pres) {
 		down *= 10;
 		r *= double(10);
 	}
-	top = long long(r);
+	top = (long long)r;
 	normalize();
 	return *this;
 }
@@ -151,7 +151,7 @@ Rational& Rational::operator *= (Rational const& r) {
 Rational& Rational::operator /= (Rational const& r) {
 	if (r.top == 0)
 	{
-		throw RationalException::div_zero;
+        throw RationalException(RationalException::div_zero);
 	}
 	top *= r.down;
 	down *= r.top;
@@ -183,7 +183,7 @@ Rational operator * (Rational const& r1, Rational const& r2) {
 Rational operator / (Rational const& r1, Rational const& r2) {
 	if (r2.top == 0)
 	{
-		throw RationalException::div_zero;
+        throw RationalException(RationalException::div_zero);
 	}
 	Rational res;
 	res.top = r1.top * r2.down;
