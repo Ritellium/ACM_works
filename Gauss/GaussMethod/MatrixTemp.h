@@ -3,12 +3,12 @@
 #include "MatrixException.h"
 #include "Rational.h"
 
-#include <vector>
-#include <fstream>
 #include <cmath>
+#include <fstream>
+#include <iomanip>
 #include <numeric>
 #include <string>
-#include <iomanip>
+#include <vector>
 
 using namespace std;
 
@@ -20,26 +20,26 @@ public:
 
 	void swapRows(size_t row1, size_t row2);
 	void swapColumns(size_t col1, size_t col2);
-	size_t findMaxInColumn(size_t i);
-	std::pair<size_t, size_t> findMaxInMatrix(size_t i);
+	size_t findMaxInColumn(size_t start);
+	std::pair<size_t, size_t> findMaxInMatrix(size_t start);
 
 	istream& input(istream& in);
 	ostream& output(ostream& out);
 
-	Matrix(size_t dim);
+	explicit Matrix(size_t dim);
 	Matrix(size_t row, size_t column);
 	Matrix(Matrix const& m1) = default;
 	Matrix(Matrix&& m1) noexcept {
 		matrix = m1.matrix;
 	}
 
-	Matrix& operator = (Matrix& m1) = default;
+	Matrix& operator = (Matrix const& m1) = default;
 	Matrix& operator = (Matrix&& m1) = default;
 
-	inline size_t rows() const {
+	[[nodiscard]] inline size_t rows() const {
 		return matrix.size();
 	}
-	inline size_t columns() const {
+	[[nodiscard]] inline size_t columns() const {
 		return matrix[0].size();
 	}
 	inline vector<T>& operator[](size_t i) {
@@ -49,23 +49,28 @@ public:
 	Matrix operator * (Matrix& m);
 	Matrix operator + (Matrix& m);
 
-	template<class T>
-	friend vector<T> mult_row(vector<T>& row, T num, size_t start);
-	template<class T>
-	friend vector<T> div_row(vector<T>& row, T num, size_t start);
-	template<class T>
-	friend vector<T> add_row(vector<T>& row1, vector<T>& row2, size_t start);
-	template<class T>
-	friend vector<T> sub_row(vector<T>& row1, vector<T>& row2, size_t start);
+    template <class Y>
+	friend vector<Y> mult_row(vector<Y>& row, Y num, size_t start);
 
-	template<class T>
-	friend Matrix<T> solveSystemSED(Matrix<T> m, Matrix<T> b);
-	template<class T>
-	friend Matrix<T> solveSystemColumn(Matrix<T> m, Matrix<T> b);
-	template<class T>
-	friend Matrix<T> solveSystemFullMatr(Matrix<T> m, Matrix<T> b);
+    template <class Y>
+	friend vector<Y> div_row(vector<Y>& row, Y num, size_t start);
 
-	T findDeterminator();
+    template <class Y>
+	friend vector<Y> add_row(vector<Y>& row1, vector<Y>& row2, size_t start);
+
+    template <class Y>
+	friend vector<Y> sub_row(vector<Y>& row1, vector<Y>& row2, size_t start);
+
+    template <class Y>
+	friend Matrix<Y> solveSystemSED(Matrix<Y> m, Matrix<Y> b);
+
+    template <class Y>
+	friend Matrix<Y> solveSystemColumn(Matrix<Y> m, Matrix<Y> b);
+
+    template <class Y>
+	friend Matrix<Y> solveSystemFullMatr(Matrix<Y> m, Matrix<Y> b);
+
+	T find_determinator();
 	Matrix findReverse();
 
 	~Matrix() = default;
@@ -75,7 +80,7 @@ template<class T>
 Matrix<T>::Matrix(size_t dim) {
 	if (dim == 0)
 	{
-		throw MatrixException::construct_err;
+		throw MatrixException(MatrixException::construct_err);
 	}
 	matrix = vector<vector<T>>(dim, vector<T>(dim, T::zero));
 }
@@ -83,7 +88,7 @@ template<class T>
 Matrix<T>::Matrix(size_t row, size_t column) {
 	if (row == 0 || column == 0)
 	{
-		throw MatrixException::construct_err;
+        throw MatrixException(MatrixException::construct_err);
 	}
 	matrix = vector<vector<T>>(row, vector<T>(column, T::zero));
 }
@@ -118,7 +123,7 @@ Matrix<T> Matrix<T>::operator * (Matrix<T>& m)
 {
 	if (columns() != m.rows())
 	{
-		throw MatrixException::mult_dims;
+        throw MatrixException(MatrixException::mult_dims);
 	}
 	Matrix<T> res(rows(), m.columns());
 	for (int i = 0; i < rows(); i++)
@@ -137,7 +142,7 @@ Matrix<T> Matrix<T>::operator + (Matrix<T>& m)
 {
 	if (rows() != m.rows() || columns() != m.columns())
 	{
-		throw MatrixException::sum_dims;
+        throw MatrixException(MatrixException::sum_dims);
 	}
 	Matrix<T> res(rows(), columns());
 	for (int i = 0; i < rows(); i++)
@@ -236,11 +241,11 @@ std::pair<size_t, size_t> Matrix<T>::findMaxInMatrix(size_t start) {
 template<class T>
 Matrix<T> solveSystemSED(Matrix<T> m, Matrix<T> b)
 {
-	for (size_t i = 0; i < m.rows(); i++) // прямой ход
+	for (size_t i = 0; i < m.rows(); i++)
 	{
 		if (m.matrix[i][i] == T::zero)
 		{
-			throw MatrixException::div_zero;
+            throw MatrixException(MatrixException::div_zero);
 		}
 		b[i] = div_row(b[i], m.matrix[i][i]);
 		m[i] = div_row(m[i], m.matrix[i][i], i);
@@ -254,7 +259,7 @@ Matrix<T> solveSystemSED(Matrix<T> m, Matrix<T> b)
 	}
 
 	Matrix<T> res(b.rows(), b.columns());
-	for (int i = m.rows() - 1; i >= 0; i--) // обратный ход
+	for (int i = m.rows() - 1; i >= 0; i--)
 	{
 		res[i] = b[i];
 		for (int j = m.rows() - 1; j > i; j--)
@@ -269,7 +274,7 @@ Matrix<T> solveSystemSED(Matrix<T> m, Matrix<T> b)
 template<class T>
 Matrix<T> solveSystemColumn(Matrix<T> m, Matrix<T> b)
 {
-	for (size_t i = 0; i < m.rows(); i++) // прямой ход
+	for (size_t i = 0; i < m.rows(); i++)
 	{
 		int swapRow = m.findMaxInColumn(i);
 		m.swapRows(i, swapRow);
@@ -277,7 +282,7 @@ Matrix<T> solveSystemColumn(Matrix<T> m, Matrix<T> b)
 
 		if (m.matrix[i][i] == T::zero)
 		{
-			throw MatrixException::div_zero;
+            throw MatrixException(MatrixException::div_zero);
 		}
 		b[i] = div_row(b[i], m.matrix[i][i]);
 		m[i] = div_row(m[i], m.matrix[i][i], i);
@@ -291,7 +296,7 @@ Matrix<T> solveSystemColumn(Matrix<T> m, Matrix<T> b)
 	}
 
 	Matrix<T> res(b.rows(), b.columns());
-	for (int i = m.rows() - 1; i >= 0; i--) // обратный ход
+	for (int i = m.rows() - 1; i >= 0; i--)
 	{
 		res[i] = b[i];
 		for (int j = m.rows() - 1; j > i; j--)
@@ -311,7 +316,7 @@ Matrix<T> solveSystemFullMatr(Matrix<T> m, Matrix<T> b) {
 		res_pos[i] = i;
 	}
 
-	for (size_t i = 0; i < m.rows(); i++) // прямой ход
+	for (size_t i = 0; i < m.rows(); i++)
 	{
 		auto swapInd = m.findMaxInMatrix(i);
 		m.swapRows(i, swapInd.first);
@@ -321,7 +326,7 @@ Matrix<T> solveSystemFullMatr(Matrix<T> m, Matrix<T> b) {
 
 		if (m.matrix[i][i] == T::zero)
 		{
-			throw MatrixException::div_zero;
+            throw MatrixException(MatrixException::div_zero);
 		}
 		b[i] = div_row(b[i], m.matrix[i][i]);
 		m[i] = div_row(m[i], m.matrix[i][i], i);
@@ -335,7 +340,7 @@ Matrix<T> solveSystemFullMatr(Matrix<T> m, Matrix<T> b) {
 	}
 
 	Matrix<T> res(b.rows(), b.columns());
-	for (int i = m.rows() - 1; i >= 0; i--) // обратный ход
+	for (int i = m.rows() - 1; i >= 0; i--)
 	{
 		res[i] = b[i];
 		for (int j = m.rows() - 1; j > i; j--)
@@ -358,10 +363,10 @@ Matrix<T> solveSystemFullMatr(Matrix<T> m, Matrix<T> b) {
 }
 
 template<class T>
-T Matrix<T>::findDeterminator() {
+T Matrix<T>::find_determinator() {
 	T det = T::one;
 	Matrix<T> m(*this);
-	for (size_t i = 0; i < m.rows(); i++) // прямой ход
+	for (size_t i = 0; i < m.rows(); i++)
 	{
 		int swapRow = m.findMaxInColumn(i);
 		m.swapRows(i, swapRow);
@@ -384,7 +389,7 @@ T Matrix<T>::findDeterminator() {
 template<class T>
 Matrix<T> Matrix<T>::findReverse() {
 	Matrix<T> b(rows());
-	for (size_t i = 0; i < rows(); i++) // прямой ход
+	for (size_t i = 0; i < rows(); i++)
 	{
 		for (size_t j = 0; j < columns(); j++)
 		{
@@ -400,7 +405,7 @@ Matrix<T> Matrix<T>::findReverse() {
 	}
 
 	Matrix<T> m(*this);
-	for (size_t i = 0; i < m.rows(); i++) // прямой ход
+	for (size_t i = 0; i < m.rows(); i++)
 	{
 		int swapRow = m.findMaxInColumn(i);
 		m.swapRows(i, swapRow);
@@ -408,7 +413,7 @@ Matrix<T> Matrix<T>::findReverse() {
 
 		if (m.matrix[i][i] == T::zero)
 		{
-			throw MatrixException::div_zero;
+            throw MatrixException(MatrixException::div_zero);
 		}
 		b[i] = div_row(b[i], m.matrix[i][i]);
 		m[i] = div_row(m[i], m.matrix[i][i], i);
@@ -422,7 +427,7 @@ Matrix<T> Matrix<T>::findReverse() {
 	}
 
 	Matrix<T> res(rows());
-	for (int i = m.rows() - 1; i >= 0; i--) // обратный ход
+	for (int i = m.rows() - 1; i >= 0; i--)
 	{
 		res[i] = b[i];
 		for (int j = m.rows() - 1; j > i; j--)
