@@ -15,31 +15,42 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GaussMethod.cpp">
+    <ClCompile Include="CPP\GaussMethod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Rational.cpp">
+    <ClCompile Include="CPP\Rational.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RationalException.cpp">
+    <ClCompile Include="CPP\RationalException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CPP\Double.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="in.txt" />
-    <Text Include="out.txt" />
+    <Text Include="IO_files\in.txt" />
+    <Text Include="IO_files\out.txt" />
+    <Text Include="IO_files\inD.txt" />
+    <Text Include="IO_files\outD.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MatrixException.h">
+    <ClInclude Include="Headers\MatrixException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Rational.h">
+    <ClInclude Include="Headers\Rational.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MatrixTemp.h">
+    <ClInclude Include="Headers\MatrixTemp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RationalException.h">
+    <ClInclude Include="Headers\RationalException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Double.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Headers\Complex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

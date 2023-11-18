@@ -128,19 +128,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GaussMethod.cpp" />
-    <ClCompile Include="Rational.cpp" />
-    <ClCompile Include="RationalException.cpp" />
+    <ClCompile Include="CPP\Double.cpp" />
+    <ClCompile Include="CPP\GaussMethod.cpp" />
+    <ClCompile Include="CPP\Rational.cpp" />
+    <ClCompile Include="CPP\RationalException.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MatrixException.h" />
-    <ClInclude Include="MatrixTemp.h" />
-    <ClInclude Include="Rational.h" />
-    <ClInclude Include="RationalException.h" />
+    <ClInclude Include="Headers\Complex.h" />
+    <ClInclude Include="Headers\Double.h" />
+    <ClInclude Include="Headers\MatrixException.h" />
+    <ClInclude Include="Headers\MatrixTemp.h" />
+    <ClInclude Include="Headers\Rational.h" />
+    <ClInclude Include="Headers\RationalException.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="in.txt" />
-    <Text Include="out.txt" />
+    <Text Include="IO_files\in.txt" />
+    <Text Include="IO_files\inD.txt" />
+    <Text Include="IO_files\out.txt" />
+    <Text Include="IO_files\outD.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
